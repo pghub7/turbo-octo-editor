@@ -47,13 +47,28 @@ public class EfficientDocument extends Document {
 	{
 		// Call getTokens on the text to preserve separate strings that are 
 		// either words or sentence-ending punctuation.  Ignore everything
-		// That is not a word or a sentence-ending puctuation.
+		// That is not a word or a sentence-ending punctuation.
 		// MAKE SURE YOU UNDERSTAND THIS LINE BEFORE YOU CODE THE REST
 		// OF THIS METHOD.
 		List<String> tokens = getTokens("[!?.]+|[a-zA-Z]+");
 		
 		// TODO: Finish this method.  Remember the countSyllables method from 
 		// Document.  That will come in handy here.  isWord defined above will also help.
+		//System.out.println(tokens);
+		// counting #words
+		for(String token : tokens) {
+			if(isWord(token)) {
+				numWords+=1;
+				numSyllables+=countSyllables(token);
+			}
+			else numSentences+=1;
+		}
+		
+		if(!tokens.isEmpty()) {
+		if(isWord(tokens.get(tokens.size()-1)))
+			numSentences+=1;	
+		}
+		
 	}
 
 	
@@ -73,7 +88,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSentences() {
 		//TODO: write this method.  Hint: It's simple
-		return 0;
+		return numSentences;
 	}
 
 	
@@ -94,7 +109,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumWords() {
 		//TODO: write this method.  Hint: It's simple
-	    return 0;
+	    return numWords;
 	}
 
 
@@ -116,7 +131,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSyllables() {
         //TODO: write this method.  Hint: It's simple
-        return 0;
+        return numSyllables;
 	}
 	
 	// Can be used for testing
@@ -139,6 +154,7 @@ public class EfficientDocument extends Document {
 		testCase(new EfficientDocument("Sentences?!"), 3, 1, 1);
 		testCase(new EfficientDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
+		testCase(new EfficientDocument("hello darkness, my old friend. loneliness > death"),12,7,2);
 		
 	}
 	
