@@ -17,6 +17,11 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	/** Create a new empty LinkedList */
 	public MyLinkedList() {
 		// TODO: Implement this method
+			size = 0;
+			head = new LLNode<E>(null);
+			tail = new LLNode<E>(null);
+			head.next = tail;
+			tail.prev = head;
 	}
 
 	/**
@@ -26,15 +31,61 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public boolean add(E element ) 
 	{
 		// TODO: Implement this method
-		return false;
+		if(size == 0 && element != null) {
+			size+=1;
+			LLNode<E> newNode = new LLNode<E>(element);
+			head.next = newNode;
+			newNode.prev = head;
+			newNode.next = tail;
+			tail.prev = newNode;
+			//System.out.println("p1:" + newNode.data + size);
+			return true;
+		}
+		
+		else if(element == null) {
+			throw new NullPointerException("element to be added cannot be null.");
+		}
+		
+		
+		else {	
+			size+=1;
+			LLNode<E> newNode = new LLNode<E>(element);
+			newNode.prev = tail.prev;
+			tail.prev.next = newNode;
+			newNode.next = tail;
+			tail.prev = newNode;
+			//System.out.println("p2:" + newNode.data + size);
+			//System.out.println("previous node data: " + newNode.prev.data);
+			//System.out.println("currNode data: " + newNode.data);
+		
+		
+		return true;
+		}
+
 	}
 
 	/** Get the element at position index 
 	 * @throws IndexOutOfBoundsException if the index is out of bounds. */
-	public E get(int index) 
+	public E get(int index) throws IndexOutOfBoundsException
 	{
 		// TODO: Implement this method.
-		return null;
+		
+		if(index >= size || index < 0 || size == 0)
+			throw new IndexOutOfBoundsException("index for getting element from list is OTOFBD.");
+		
+		else {
+		LLNode<E> currNode = new LLNode<E>(null);
+		currNode = this.head;
+		E data;
+		
+		for(int i = 0;i<=index;i++) {
+			currNode = currNode.next;
+			//System.out.println("currNode: "+currNode.data);
+		}
+		
+		data = currNode.data;
+		return data;
+		}
 	}
 
 	/**
@@ -45,6 +96,39 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public void add(int index, E element ) 
 	{
 		// TODO: Implement this method
+		
+		if(index>size|| index < 0)
+			throw new IndexOutOfBoundsException();
+		
+		else if(element == null)
+			throw new NullPointerException("No null values to be added to LL bruh..");
+		
+		else if(index == size) {
+			add(element);
+		}
+		
+		else {
+			//System.out.println(this.size);
+			size+=1;
+			LLNode<E> newNode = new LLNode<E>(element);
+			LLNode<E> currNode = new LLNode<E>(null);
+			currNode = this.head;
+			for(int i = 0; i<=index;i++) {
+				//System.out.println(i);
+				currNode = currNode.next;
+				//System.out.println("currNode: " + currNode.data);
+
+			}
+			newNode.next = currNode;
+			newNode.prev = currNode.prev;
+			currNode.prev.next = newNode;
+			currNode.prev = newNode;
+			//System.out.println("currNode: " + currNode.data);
+			//System.out.println("newNode: " + newNode.data);
+		
+		}
+		
+
 	}
 
 
@@ -52,7 +136,8 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public int size() 
 	{
 		// TODO: Implement this method
-		return -1;
+		
+		return this.size;
 	}
 
 	/** Remove a node at the specified index and return its data element.
@@ -64,7 +149,23 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E remove(int index) 
 	{
 		// TODO: Implement this method
-		return null;
+		if(index >= size || index < 0) {
+			throw new IndexOutOfBoundsException("cannot remove element since index is OOB"); 
+		}
+		
+		else {
+			size-=1;
+			LLNode<E> currNode = new LLNode<E>(null);
+			currNode = head;
+			for(int i = 0; i<=index; i++) {
+				currNode = currNode.next;
+			}
+			currNode.next.prev = currNode.prev;
+			currNode.prev.next = currNode.next;
+			
+			return currNode.data;
+		}
+		
 	}
 
 	/**
@@ -77,7 +178,22 @@ public class MyLinkedList<E> extends AbstractList<E> {
 	public E set(int index, E element) 
 	{
 		// TODO: Implement this method
-		return null;
+		if(index >= size || index < 0 ) {
+			throw new IndexOutOfBoundsException("index boundaries not properly set");
+		}
+		else if(element == null) {
+			throw new NullPointerException("no setting null elements in list");
+		}
+		else {
+			LLNode<E> currNode = new LLNode<E>(null);
+			currNode = this.head;
+			for(int i = 0; i<=index; i++) {
+				currNode = currNode.next;
+			}
+			E dataToSend = currNode.data;
+			currNode.data = element;
+			return dataToSend;
+		}
 	}   
 }
 
