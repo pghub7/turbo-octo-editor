@@ -155,8 +155,8 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	{
 		// feed the generator a fixed random value for repeatable behavior
 		MarkovTextGeneratorLoL gen = new MarkovTextGeneratorLoL(new Random(42));
-		//String textString = "Hello.  Hello there.  This is a test.  Hello there.  Hello Bob.  Test again.";
-		String textString = "hi there hi hi leo hi";
+		String textString = "Hello.  Hello there.  This is a test.  Hello there.  Hello Bob.  Test again.";
+		//String textString = "hi there hi hi leo hi";
 		System.out.println(textString);
 		gen.train(textString);
 		System.out.println(gen);
@@ -189,7 +189,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		System.out.println(textString2);
 		gen.retrain(textString2);
 		System.out.println(gen);
-		System.out.println(gen.generateText(20));
+		System.out.println(gen.generateText(30));
 	}
 
 }

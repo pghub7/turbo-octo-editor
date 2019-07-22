@@ -25,11 +25,11 @@ public class DictionaryBenchmarking {
 
 		// The number of steps to run.  
 		// You can play around with this.
-		int numSteps = 20;
+		int numSteps = 10;
 		
 		// The number of words to start with. 
 		// You can play around with this.
-		int start = 50000;
+		int start = 5000;
 		
 		String notInDictionary = "notaword";
 		

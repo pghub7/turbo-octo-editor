@@ -1,14 +1,16 @@
 package spelling;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 /** 
  * An trie data structure that implements the Dictionary and the AutoComplete ADT
- * @author You
+ * @author Parth
  *
  */
 public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
@@ -40,7 +42,61 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-	    return false;
+		try {
+			
+		//size = 0;	
+		String lcWord = word.toLowerCase();
+		TrieNode currNode = root;
+		TrieNode node = root;
+		TrieNode Node = root;
+		boolean charAlreadyPresent = false;
+		int index = 0;
+		
+		//looking for a word or a part of it
+		for(int i = 0; i < lcWord.length(); i++ ) {
+			//System.out.println("parent: " + node.getText());
+			Node = node;
+			node = node.getChild(lcWord.charAt(i));
+			if(node != null ) {
+				//System.out.println("child: " + node.getText());
+				index = i;
+				charAlreadyPresent = true;
+				if(node.getText().equals(lcWord) && !node.endsWord()) {
+					node.setEndsWord(true);
+					size+=1;
+				}
+			}
+			else break;
+		}
+		
+		//System.out.println("Node: " + Node.getText());
+		//System.out.println("index after break : " + index); 
+		
+		if(charAlreadyPresent) 		
+ 			index+=1;
+		
+			for(int i = index; i < lcWord.length(); i++ ) {
+				Node = Node.insert(lcWord.charAt(i));
+				System.out.println(Node.getText());
+			}
+			
+			
+			if(Node.getText().equals(lcWord)) {
+				Node.setEndsWord(true);
+				size+=1;
+				return true;
+			}
+			else Node.setEndsWord(false);
+				//System.out.println(word + " is present in testDict");
+			
+		} catch(NullPointerException e) {
+			
+		}
+		
+
+		
+		return false; 
+		
 	}
 	
 	/** 
@@ -50,7 +106,9 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+		
+	
+	    return size;
 	}
 	
 	
@@ -60,7 +118,36 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean isWord(String s) 
 	{
 	    // TODO: Implement this method
-		return false;
+
+	try {
+   	 	TrieNode currNode = root;
+   	 	int counter = 0;
+   	 	boolean stemFound = false;
+   	 	String word = s.toLowerCase();
+   	 	for(int i = 0; i < word.length(); i++) {
+   	 		if(currNode.getChild(word.charAt(i))!= null) {
+   	 			counter+=1;
+   	 			currNode = currNode.getChild(word.charAt(i));
+   	 		}
+   	 	}
+   	 	//System.out.println("Stem: " + counter + "StemNode: " + currNode.getText());
+   	 	if(counter == word.length()  ) {
+   	 		stemFound = true;
+   	 		//System.out.println("stem found");
+   	 	} 
+   		 
+   	 	if(stemFound) {
+   			if(currNode.endsWord())
+   				return true;
+   		}
+		
+	}
+	catch (NullPointerException e) {
+			
+	}
+   	
+	return false;
+		
 	}
 
 	/** 
@@ -101,7 +188,54 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
     	 
-         return null;
+    	 
+    	 // finding the stem 
+    	 TrieNode currNode = root;
+    	// TrieNode stemNode = currNode;
+    	 int counter = 0;
+    	 boolean stemFound = false;
+    	 String word = prefix.toLowerCase();
+    	 for(int i = 0; i < word.length(); i++) {
+    		 if(currNode.getChild(word.charAt(i))!= null) {
+    			 counter+=1;
+    			 //stemNode = currNode;
+    			 currNode = currNode.getChild(word.charAt(i));
+    		 }
+    	 }
+    	 //System.out.println("Stem: " + counter + "StemNode: " + currNode.getText());
+    	 if(counter == word.length()  ) {
+    		 stemFound = true;
+    		 //System.out.println("stem found");
+    	 }
+    	 
+    	 if(stemFound) {
+    		 Queue<TrieNode> q = new LinkedList<TrieNode>();
+    		 q.add(currNode);
+    		 //System.out.println("currNode: " + currNode.getText());
+    		 List<String> completions = new ArrayList<String>();
+    		 
+    		 while(!q.isEmpty() && numCompletions>0) {
+    			 //System.out.println("inside while loop");
+    			 TrieNode thisNode = q.remove();
+    			 //System.out.println("thisNode text: " + thisNode.getText());
+    			 if(thisNode.endsWord()) {
+    				 numCompletions-=1;
+    				 //System.out.println("thisNode isWord: " + thisNode.getText());
+    				 completions.add(thisNode.getText());
+    				 }
+				 TrieNode child = null;
+				 for(Character c : thisNode.getValidNextCharacters()) {
+					 child = thisNode.getChild(c);
+					 //System.out.println("child: " + child.getText());
+					 q.add(child);
+    			 }
+    		 }
+    		 System.out.println("Completions list: " + completions);
+    		 return completions;
+    	 }
+    	 
+    		 
+    	 else return new ArrayList<String>();
      }
 
  	// For debugging
@@ -125,6 +259,26 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
  		}
  	}
  	
-
+ 	/*public boolean checkForWord(TrieNode curr, String s) {
+ 		
+ 	boolean isWord = false;
+ 	try {
+ 	if(curr != null) {
+ 		TrieNode next = null;
+ 		for (Character c : curr.getValidNextCharacters()) {
+ 			next = curr.getChild(c);
+ 			if(next.getText().equals(s))
+ 				isWord = true;
+ 			checkForWord(next,s);
+ 		}
+ 	}
+ 	}
+ 	catch (NullPointerException e) {
+ 		
+ 	}
+ 	return isWord;
+ 	} */
+ 	
+     
 	
 }

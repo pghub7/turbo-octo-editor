@@ -22,6 +22,8 @@ public class AutoCompleteDictionaryTrieTester {
 	AutoCompleteDictionaryTrie emptyDict; 
 	AutoCompleteDictionaryTrie smallDict;
 	AutoCompleteDictionaryTrie largeDict;
+	AutoCompleteDictionaryTrie testDict;
+
 	
 	/**
 	 * @throws java.lang.Exception
@@ -32,20 +34,41 @@ public class AutoCompleteDictionaryTrieTester {
 		emptyDict = new AutoCompleteDictionaryTrie();
 		smallDict = new AutoCompleteDictionaryTrie();
 		largeDict = new AutoCompleteDictionaryTrie();
+		testDict = new AutoCompleteDictionaryTrie();
+		
 
 		smallDict.addWord("Hello");
 		smallDict.addWord("HElLo");
 		smallDict.addWord("help");
-		smallDict.addWord("he");
+		smallDict.addWord("he");	//not flagged
 		smallDict.addWord("hem");
 		smallDict.addWord("hot");
 		smallDict.addWord("hey");
 		smallDict.addWord("a");
 		smallDict.addWord("subsequent");
 		
+		
 		DictionaryLoader.loadDictionary(largeDict, dictFile);
+		
+		smallDict.printTree();
 	}
-
+	
+	@Test
+	public void testing() {
+		assertEquals("asserting if hello is present ",true,testDict.addWord("hello"));
+		assertEquals("asserting if help is present ",true,testDict.addWord("help"));
+		assertEquals("asserting if hellO is present",false,testDict.addWord("hellO"));
+		assertEquals("adding he",false,testDict.addWord("he"));
+		assertEquals("adding spiegel",true,testDict.addWord("spiegel"));
+		assertEquals("asserting if he is present ",true,testDict.isWord("he"));
+		assertEquals("asserting if spiegel is present ",true,testDict.isWord("spiegel"));
+		assertEquals("adding spike ",true,testDict.addWord("spike"));
+		assertEquals("asserting is spike is presenr ",true,testDict.isWord("spike"));
+		testDict.addWord("downhill");
+		//assertEquals("seeing if downhil is a word: ",false,testDict.);
+		testDict.printTree();
+	}
+	
 	
 	/** Test if the size method is working correctly.
 	 */
@@ -55,10 +78,10 @@ public class AutoCompleteDictionaryTrieTester {
 		assertEquals("Testing size for empty dict", 0, emptyDict.size());
 		assertEquals("Testing size for small dict", 8, smallDict.size());
 		assertEquals("Testing size for large dict", 4438, largeDict.size());
-	}
+	} 
 	
 	/** Test the isWord method */
-	@Test
+	@Test 
 	public void testIsWord()
 	{
 		assertEquals("Testing isWord on empty: Hello", false, emptyDict.isWord("Hello"));
@@ -127,11 +150,14 @@ public class AutoCompleteDictionaryTrieTester {
 		assertEquals("Testing isWord on large: subsequent", true, largeDict.isWord("subsequent"));
 		
 		
-	}
+	} 
 	
 	@Test
 	public void testPredictCompletions()
 	{
+		
+		//smallDict.predictCompletions("h", 0);
+		//smallDict.predictCompletions("subs", 0);
 		List<String> completions;
 		completions = smallDict.predictCompletions("", 0);
 		assertEquals(0, completions.size());
@@ -157,10 +183,10 @@ public class AutoCompleteDictionaryTrieTester {
 		assertTrue(allIn);
 	
 		completions = smallDict.predictCompletions("x", 5);
-		assertEquals(0, completions.size());
+		assertEquals(0, completions.size()); 
 	}
 	
-	
+ 
 	
 	
 }
