@@ -77,7 +77,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 		
 			for(int i = index; i < lcWord.length(); i++ ) {
 				Node = Node.insert(lcWord.charAt(i));
-				System.out.println(Node.getText());
+				//System.out.println(Node.getText());
 			}
 			
 			

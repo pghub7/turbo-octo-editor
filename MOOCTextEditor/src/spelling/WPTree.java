@@ -3,10 +3,12 @@
  */
 package spelling;
 
+import java.util.ArrayList;
 //import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * WPTree implements WordPath by dynamically creating a tree of words during a Breadth First
@@ -27,9 +29,10 @@ public class WPTree implements WordPath {
 	public WPTree () {
 		this.root = null;
 		// TODO initialize a NearbyWords object
-		// Dictionary d = new DictionaryHashSet();
-		// DictionaryLoader.loadDictionary(d, "data/dict.txt");
-		// this.nw = new NearbyWords(d);
+		 Dictionary d = new DictionaryHashSet();
+		 DictionaryLoader.loadDictionary(d, "data/dict.txt");
+		 this.nw = new NearbyWords(d);
+		
 	}
 	
 	//This constructor will be used by the grader code
@@ -42,6 +45,39 @@ public class WPTree implements WordPath {
 	public List<String> findPath(String word1, String word2) 
 	{
 	    // TODO: Implement this method.
+		
+		if(word2 == null || word2 =="" || !nw.dict.isWord(word2)) 
+			return new LinkedList<String>();
+		
+		Boolean wordFound = false;
+		Queue<WPTreeNode> queue = new LinkedList<WPTreeNode>();
+		HashSet<String> visited = new HashSet<>();
+		WPTreeNode root = new WPTreeNode(word1,null);
+		queue.add(root);
+		visited.add(root.getWord());
+		
+		while(!queue.isEmpty() && !wordFound) {
+			WPTreeNode currNode = queue.remove();
+			//generating all children for a parent node
+			List<String> childrenList = nw.distanceOne(currNode.getWord(),true);
+			//adding children for parent node
+			for(int i = 0; i < childrenList.size(); i++) {
+				if(!visited.contains(childrenList.get(i))) {
+					WPTreeNode child = currNode.addChild(childrenList.get(i));
+					visited.add(childrenList.get(i));
+					queue.add(child);
+					if(childrenList.get(i).equals(word2.toLowerCase())) {
+						wordFound = true;
+						return child.buildPathToRoot();
+					}
+				}
+			}
+						
+
+		}
+		
+
+		
 	    return new LinkedList<String>();
 	}
 	
@@ -142,6 +178,12 @@ class WPTreeNode {
         ret+=(" ]\n");
         return ret;
     }
-
+    public static void main(String args[] ) {
+    	String word = "time";
+    	WPTree wp = new WPTree();
+    	List<String> path = new ArrayList<String>();
+    	path = wp.findPath(word, "shrine");
+    	System.out.println(path);
+    }
 }
 
